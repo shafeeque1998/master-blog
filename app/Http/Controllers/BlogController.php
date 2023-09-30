@@ -11,18 +11,21 @@ class BlogController extends Controller
     public function store(Request $request){
 
         // Validate the incoming request data
-        $validatedData = $request->validate([
+        $validatedData = Validator::make($request->all(), [
             'heading' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
-        // Create a new blog post using Eloquent's create method
-        $blog = Blog::create([
-            'heading' => $validatedData['heading'],
-            'content' => $validatedData['content'],
-        ]);
+        if ($validatedData->fails()) {
+            return response()->json(['errors' => $validatedData->errors()], 422); 
+        }else{
+            Blog::create($validatedData);
 
-        // Return a response indicating success
-        return response()->json(['message' => 'Blog post created successfully'], 201);
+            // Return a response indicating success
+            return response()->json(['message' => 'Blog post created successfully'], 201);
+        }
+
+
+        
     }
 }
