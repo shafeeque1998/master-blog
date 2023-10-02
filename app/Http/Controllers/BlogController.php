@@ -5,27 +5,23 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use App\Http\Requests\BlogPostRequest;
 
 class BlogController extends Controller
 {
-    public function store(Request $request){
+    public function store(BlogPostRequest $request)
+{
 
-        // Validate the incoming request data
-        $validatedData = Validator::make($request->all(), [
-            'heading' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
+    try {
+            // Create a new blog post using Eloquent's create method with validated data
+        $blog = Blog::create($request->validated());
 
-        if ($validatedData->fails()) {
-            return response()->json(['errors' => $validatedData->errors()], 422); 
-        }else{
-            Blog::create($validatedData);
-
-            // Return a response indicating success
-            return response()->json(['message' => 'Blog post created successfully'], 201);
-        }
-
-
-        
+            // Return the created blog post and a 201 status code upon success
+        return response()->json(['message' => 'Blog post created successfully', 'data' => $blog], 201);
+    } catch (\Exception $e) {
+            // Handle any database or other exceptions
+        return response()->json(['message' => 'Failed to create blog post', 'error' => $e->getMessage()], 500);
     }
+}
+
 }

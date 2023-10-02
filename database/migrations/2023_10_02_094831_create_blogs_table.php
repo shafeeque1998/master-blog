@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('blogs', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Creates an auto-incrementing primary key 'id' column
             $table->string('heading');
             $table->text('content');
-            $table->timestamps();
+            $table->timestamps(); // Adds 'created_at' and 'updated_at' timestamp columns
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('blogs');
     }
