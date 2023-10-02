@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Str;
 
 class Blog extends Model{
 
     use HasFactory;
 
-    protected $fillable = [
-        'heading',
-        'content',
-        // Add other fields you want to be fillable here
-    ];
+    // protected $fillable = [
+    //     'heading',
+    //     'content',
+    //     // Add other fields you want to be fillable here
+    // ];
 
-    protected $guarded = [];
+    protected $guarded = ['uuid'];
 
     protected static function booted(){
         
@@ -24,7 +24,7 @@ class Blog extends Model{
 
         // Generate and set a UUID before saving
         static::creating(function ($model) {
-            $model->uuid = Uuid::uuid4()->toString();
+            $model->uuid = (string) Str::uuid();
         });
     }
 
